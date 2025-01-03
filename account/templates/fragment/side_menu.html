@@ -13,6 +13,18 @@
                 </a>
             </li>
             {% endif %}
+            {% if user.has_admin or user.has_commercial %}
+            <li class="nav-item mb-5">
+                <a class="nav-link" href="{% url 'create_task' %}">
+                    <i class="fas fa-money-bill-transfer m-0 {% if request.resolver_match.url_name == 'create_task' %} active {% endif %}"></i>
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item mb-5">
+                <a class="nav-link" href="{% url 'tasks' %}">
+                    <i class="fas fa-bars-staggered m-0 {% if request.resolver_match.url_name == 'tasks' %} active {% endif %}"></i>
+                </a>
+            </li>
             {% if user.has_admin %}
             <li class="nav-item dropdown mb-5">
                 <a class="nav-link dropdown-toggle no-caret" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,7 +45,18 @@
                 </a>
             </li>
             {% endif %}
-
+            {% if user.has_admin or user.has_commercial %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'create_task' %}">
+                    <i class="fas fa-money-bill-transfer m-0 {% if request.resolver_match.url_name == 'create_task' %} active {% endif %}"></i>
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'tasks' %}">
+                    <i class="fas fa-bars-staggered m-0 {% if request.resolver_match.url_name == 'tasks' %} active {% endif %}"></i>
+                </a>
+            </li>
             {% if user.has_admin %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle no-caret" href="#" id="navbarDropdownSmall" role="button" data-bs-toggle="dropdown" aria-expanded="false">

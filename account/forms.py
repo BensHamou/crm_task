@@ -9,14 +9,18 @@ from django import forms
 def getAttrs(type, placeholder='', other={}):
     ATTRIBUTES = {
         'control': {'class': 'form-control', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
+        'controlReq': {'class': 'form-control', 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'login': {'class': 'form-control', 'style': 'padding-left: 30px; background-color: white; height: 45px; border: 1px solid #ccc; border-radius: 100px;', 'placeholder': ''},
         'controlID': {'class': 'form-control search-input-id', 'autocomplete': "off", 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
+        'controlIDReq': {'class': 'form-control search-input-id', 'autocomplete': "off", 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'controlSearch': {'class': 'form-control search-input', 'autocomplete': "off", 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
+        'controlSearchReq': {'class': 'form-control search-input', 'autocomplete': "off", 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'search': {'class': 'form-control mb-lg-0 mb-3', 'style': 'padding-left: 30px; margin-right: 10px; border-radius: 100px; max-width: 500px', 'type': 'text', 'placeholder': '', 'id': 'search'},
         'select': {'class': 'form-select', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
         'select2': {'class': 'form-select select2', 'style': 'background-color: #ffffff; padding-left: 30px; width: 100%; border-radius: 100px;'},
         'select3': {'class': 'form-select select3', 'style': 'background-color: #ffffff; padding-left: 30px; width: 100%; border-radius: 100px;'},
         'date': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
+        'dateReq': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;'},
         'time': {'type': 'time', 'class': 'form-control timeinput', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'month': {'type': 'month', 'class': 'form-control dateinput','style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
         'textarea': {"rows": "3", 'style': 'width: 100%', 'class': 'form-control', 'placeholder': '', 'style': 'padding-left: 30px; background-color: #ffffff; border-radius: 50px;'}

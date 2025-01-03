@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("crm_task/admin/", admin.site.urls),
     path("", include('account.urls')),
+    path("", include('report.urls'))
 ]
 
 handler404 = 'account.views.page_not_found'
