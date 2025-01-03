@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    container_name: TASK_DB
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=CRMTask
+      - POSTGRES_USER=crm_task
+      - POSTGRES_PASSWORD=crm_task
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5429:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crm_task:latest
+    restart: unless-stopped
+    container_name: TASK_APP
+    ports:
+      - "8029:8029"
+    volumes:
+      - ./crm_task:/crm_task  # Mount the app folder to sync code changes
+      - ./media:/app/media    # Ensure media files persist on the host
+    command: >
+      sh -c "python manage.py makemigrations &&
+         python manage.py migrate &&
+         python manage.py runserver 0.0.0.0:8029"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=CRMTask
+      - DB_USER=crm_task
+      - DB_PASS=crm_task
+      - DB_PORT=5432
+
+volumes:
+  db_data:
+  media_volume:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.49.0/24
