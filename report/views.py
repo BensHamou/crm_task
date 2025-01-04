@@ -14,7 +14,7 @@ from .utils import *
 from django.forms import modelformset_factory
 from .utils import connect_odoo
 
-# db, uid, models, password = connect_odoo()
+db, uid, models, password = connect_odoo()
 
 # DECORATORS
 
@@ -26,7 +26,7 @@ def check_creator(view_func):
         elif 'pk' in kwargs:
             task_id = kwargs['pk']
         task = Task.objects.get(id=task_id)
-        if task.creator != request.user and request.user.role != 'Admin':
+        if task.create_uid != request.user and request.user.role != 'Admin':
             return render(request, '403.html', status=403)
         return view_func(request, *args, **kwargs)
     return wrapper
@@ -75,7 +75,7 @@ def listTaskView(request):
 @login_required(login_url='login')
 @check_creator
 def deleteTaskView(request, id):
-    task = get_object_or_404(User, id=id)
+    task = get_object_or_404(Task, id=id)
     try:
         task.delete()
         url_path = reverse('tasks')
@@ -87,13 +87,13 @@ def deleteTaskView(request, id):
 @login_required(login_url='login')
 @comm_app_required
 def createTaskView(request):
-    form = TaskForm(user=request.user)
-    ImageFormSet = modelformset_factory(Image,form=ImageForm, extra=1, can_delete=True)
+    form = TaskForm()
+    ImageFormSet = modelformset_factory(Image,form=ImageForm, extra=0, can_delete=True)
     if request.method == 'POST':
-        form = TaskForm(request.POST, user=request.user)
+        form = TaskForm(request.POST)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
         if form.is_valid() and formset.is_valid():
-            task = form.save(commit=False)
+            task = form.save(commit=False, user=request.user)
             task.state = 'A Faire'
             task.save()
             for image in formset:
@@ -104,7 +104,7 @@ def createTaskView(request):
                     if image.instance.pk is None:
                         image.instance.task = task
                     if image.instance.image:
-                        image.save() 
+                        image.save(user=request.user) 
             return redirect(getRedirectionURL(request, reverse('tasks')))
         else:
             print("Form Errors:", form.errors)
@@ -120,13 +120,13 @@ def createTaskView(request):
 @check_creator
 def editTaskView(request, id):
     task = Task.objects.get(id=id)
-    form = TaskForm(instance=task, user=request.user)
+    form = TaskForm(instance=task)
     ImageFormSet = modelformset_factory(Image,form=ImageForm, extra=0, can_delete=True)
     if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES, instance=task, user=request.user)
+        form = TaskForm(request.POST, request.FILES, instance=task)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.filter(task=task))
         if form.is_valid() and formset.is_valid():
-            task = form.save(commit=False)
+            task = form.save(commit=False, user=request.user)
             task.save()
             for image in formset:
                 if image.cleaned_data.get('DELETE'):
@@ -136,8 +136,13 @@ def editTaskView(request, id):
                     if image.instance.pk is None:
                         image.instance.task = task
                     if image.instance.image:
-                        image.save() 
+                        image.save(user=request.user) 
             return redirect(getRedirectionURL(request, reverse('detail_task', args=[task.id])))
+        else:
+            print("Form Errors:", form.errors)
+            print("Formset Errors:")
+            for subform in formset:
+                print(subform.errors)
     else:
         formset = ImageFormSet(queryset=Image.objects.filter(task=task))
     context = {'form': form, 'task': task, 'formset': formset }
@@ -149,16 +154,14 @@ def doneTask(request, id):
     try:
         task = Task.objects.get(id=id)
     except Task.DoesNotExist:
-        messages.success(request, 'Tâche n\'existe pas')
+        return JsonResponse({'success': True, 'message': 'Tâche n\'existe pas'})
 
-    url_path = reverse('detail_task', args=[task.id])
     if task.state == 'Fait':
-        return redirect(getRedirectionURL(request, url_path))
+        return JsonResponse({'success': True, 'message': 'Tâche déjà marquée comme fait'})
     
     task.state = 'Fait'
     task.save()
-    messages.success(request, 'Tâche marquée comme fait')
-    return redirect(getRedirectionURL(request, url_path))
+    return JsonResponse({'success': True, 'message': 'Tâche marquée comme fait'})
 
 @login_required(login_url='login')
 @check_creator
@@ -166,16 +169,14 @@ def draftTask(request, id):
     try:
         task = Task.objects.get(id=id)
     except Task.DoesNotExist:
-        messages.success(request, 'Tâche n\'existe pas')
+        return JsonResponse({'success': True, 'message': 'Tâche n\'existe pas'})
 
-    url_path = reverse('detail_task', args=[task.id])
     if task.state == 'A Faire':
-        return redirect(getRedirectionURL(request, url_path))
+        return JsonResponse({'success': True, 'message': 'Tâche déjà marquée comme a faire'})
     
     task.state = 'A Faire'
     task.save()
-    messages.success(request, 'Tâche marquée comme a faire')
-    return redirect(getRedirectionURL(request, url_path))
+    return JsonResponse({'success': True, 'message': 'Tâche marquée comme a faire'})
 
 @login_required(login_url='login')
 @comm_app_required
@@ -191,7 +192,7 @@ def live_search(request):
     term = request.GET.get('search_term', '')
 
     if search_for == 'client':
-        domain = [['name', 'ilike', term], '|', '|',['customer', '=', True], ['is_company', '=', True]]
+        domain = [['name', 'ilike', term], '|', ['customer', '=', True], ['is_company', '=', True]]
     else:
         domain = [['name', 'ilike', term]]
 

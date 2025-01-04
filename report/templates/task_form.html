@@ -1,43 +1,81 @@
 {% extends "main.html" %}
 
 {% block title %}
-{% if payment %} Modification du paiement {% else %} Création d'un paiement {% endif %}
+{% if task %} Modification d'une tâche {% else %} Création d'une tâche {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-left mb-3" style="padding: 0 25px;">
     <a href="javascript:void(0);" 
-        onclick="window.location=constructUrl('{% url 'payments' %}')" 
+        onclick="window.location=constructUrl('{% url 'tasks' %}')" 
         class="text-decoration-none d-flex align-items-center" 
         style="letter-spacing: 1.2px;">
         <i class="fas fa-arrow-left" style="color: #060747; margin-right: 25px"></i>
-        <p class="lead m-0 p-0 page-title" style="color: #060747; font-weight: 600">{% if payment %} Modification du paiement ID {{ payment.id|stringformat:"04d" }}{% else %} Ajouter un paiement {% endif %}</p>
+        <p class="lead m-0 p-0 page-title" style="color: #060747; font-weight: 600">{% if task %} Modification du tâche ID {{ task.id|stringformat:"04d" }}{% else %} Ajouter une tâche {% endif %}</p>
     </a>
     <div class="d-flex justify-content-end ml-auto">
-        <button type="submit" form="payment-form" class="btn-list d-none d-lg-block">Sauvegarder</button>
+        <button type="submit" form="task-form" class="btn-list d-none d-lg-block">Sauvegarder</button>
     </div>
 </div>
 
-<form method="POST" enctype="multipart/form-data" id="payment-form">
+<form method="POST" enctype="multipart/form-data" id="task-form">
     {% csrf_token %}
     <div class="table-responsive" style="padding: 15px;">
         <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Commercial</label>
-                {{ form.commercial }}
-                {% if form.commercial.errors %}
-                    <small class="text-danger">{{ form.commercial.errors }}</small>
+            <div class="col-lg-12 col-md-12 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Designation</label>
+                {{ form.designation }}
+                {% if form.designation.errors %}
+                    <small class="text-danger">{{ form.designation.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Zone</label>
-                {{ form.zone }}
-                {% if form.zone.errors %}
-                    <small class="text-danger">{{ form.zone.errors }}</small>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Equipe Commerciale</label>
+                {{ form.comm_team }}
+                {{ form.comm_team_id }}
+                <div id="suggestions" class="sugdiv"></div>
+                {% if form.comm_team.errors %}
+                    <small class="text-danger">{{ form.comm_team.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Client</label>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Projet</label>
+                {{ form.project }}
+                {{ form.project_id }}
+                <div id="suggestions" class="sugdiv"></div>
+                {% if form.project.errors %}
+                    <small class="text-danger">{{ form.project.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Type de Tâche</label>
+                {{ form.task_type }}
+                {{ form.task_type_id }}
+                <div id="suggestions" class="sugdiv"></div>
+                {% if form.task_type.errors %}
+                    <small class="text-danger">{{ form.task_type.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Piste</label>
+                {{ form.lead }}
+                {{ form.lead_id }}
+                <div id="suggestions" class="sugdiv"></div>
+                {% if form.lead.errors %}
+                    <small class="text-danger">{{ form.lead.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Wilaya</label>
+                {{ form.wilaya }}
+                {{ form.wilaya_id }}
+                <div id="suggestions" class="sugdiv"></div>
+                {% if form.wilaya.errors %}
+                    <small class="text-danger">{{ form.wilaya.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Client, prospect ou contact</label>
                 {{ form.client }}
                 {{ form.client_id }}
                 <div id="suggestions" class="sugdiv"></div>
@@ -45,105 +83,148 @@
                     <small class="text-danger">{{ form.client.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Payeur</label>
-                {{ form.payer }}
-                {{ form.payer_id }}
-                <div id="suggestions" class="sugdiv"></div>
-                {% if form.payer.errors %}
-                    <small class="text-danger">{{ form.payer.errors }}</small>
-                {% endif %}
-            </div>
         </div>
         <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Banque Client</label>
-                {{ form.bank }}
-                {% if form.bank.errors %}
-                    <small class="text-danger">{{ form.bank.errors }}</small>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date création</label>
+                {{ form.date_task }}
+                {% if form.date_task.errors %}
+                    <small class="text-danger">{{ form.date_task.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date récupération paiement</label>
-                {{ form.date }}
-                {% if form.date.errors %}
-                    <small class="text-danger">{{ form.date.errors }}</small>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date prévue</label>
+                {{ form.date_scheduler }}
+                {% if form.date_scheduler.errors %}
+                    <small class="text-danger">{{ form.date_scheduler.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Banque Dépot</label>
-                {{ form.bank_depot }}
-                {% if form.bank_depot.errors %}
-                    <small class="text-danger">{{ form.bank_depot.errors }}</small>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date réalisée</label>
+                {{ form.date_done }}
+                {% if form.date_done.errors %}
+                    <small class="text-danger">{{ form.date_done.errors }}</small>
                 {% endif %}
             </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date de dépot</label>
-                {{ form.date_depot }}
-                {% if form.date_depot.errors %}
-                    <small class="text-danger">{{ form.date_depot.errors }}</small>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Type de versement</label>
-                {{ form.payment_type }}
-                {% if form.payment_type.errors %}
-                    <small class="text-danger">{{ form.payment_type.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Référence</label>
-                {{ form.ref }}
-                {% if form.ref.errors %}
-                    <small class="text-danger">{{ form.ref.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Montant</label>
-                {{ form.amount }}
-                {% if form.amount.errors %}
-                    <small class="text-danger">{{ form.amount.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-3 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Observation</label>
-                {{ form.observation }}
-                {% if form.observation.errors %}
-                    <small class="text-danger">{{ form.observation.errors }}</small>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">L'intervalle date prevue et date réalisée</label>
+                {{ form.delais_late }}
+                {% if form.delais_late.errors %}
+                    <small class="text-danger">{{ form.delais_late.errors }}</small>
                 {% endif %}
             </div>
         </div>
         <div class="row mb-4">
             <div class="col-lg-6 col-md-6 mb-2">
-                <div class="form-group image-container">
-                    <label for="check_image">Chèque (Image)</label>
-                    {{ form.check_image }}
-                    {% if form.check_image.errors %}
-                        <small class="text-danger">{{ form.check_image.errors }}</small>
-                    {% endif %}
-                </div>
+                <label class="form-label" style="color: #343434; font-weight: 600;">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <small class="text-danger">{{ form.description.errors }}</small>
+                {% endif %}
             </div>
             <div class="col-lg-6 col-md-6 mb-2">
-                <div class="form-group image-container">
-                    <label for="deposit_image">Dépot de chèque (Image)</label>
-                    {{ form.deposit_image }}
-                    {% if form.deposit_image.errors %}
-                        <small class="text-danger">{{ form.deposit_image.errors }}</small>
-                    {% endif %}
-                </div>
+                <label class="form-label" style="color: #343434; font-weight: 600;">Résumé</label>
+                {{ form.resume }}
+                {% if form.resume.errors %}
+                    <small class="text-danger">{{ form.resume.errors }}</small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mt-4 custom-card">
+            <div class="card-header card-header-secondary d-flex justify-content-between align-items-center">
+                <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Pièces jointes</p>
+                <button type="button" class="btn btn-primary" id="addImage">Ajouter un élément</button>
+            </div>
+            <div class="row m-4" id="imageContainer">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                        <div class="frame-container">
+                            <div class="image-form">
+                                <div class="form-outline image-div">
+                                    {{ form.image }}
+                                    {{ form.id }}
+                                    {{ form.DELETE }}
+                                </div>
+                                <div class="image-preview">
+                                    {% if form.instance.pk %}
+                                        <img src="{{ form.instance.image.url }}" alt="Image Preview" class="preview-img">
+                                    {% endif %}
+                                </div>
+                                <button type="button" class="btn remove-form" data-instance-id="{{ form.instance.pk }}"><i class="far fa-trash-alt" style="color: #45558A;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         <div class="row m-0">
-            <div class="col-12 text-center m-0">
-                <button type="submit" form="payment-form" class="btn-list-sm d-lg-none">{% if form.instance.pk %}Sauvegarder{% else %}Ajouter un paiement{% endif %}</button>
+            <div class="col-12 text-center m-0 mt-2">
+                <button type="submit" form="task-form" class="btn-list-sm d-lg-none">{% if form.instance.pk %}Sauvegarder{% else %}Ajouter une tâche{% endif %}</button>
             </div>
         </div>
     </div>
 </form>
 
 <style>
+
+    #imageContainer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    [name$="-DELETE"] {
+        display: none;
+    }
+
+    .frame-container {
+      width: 350px;
+      margin: 10px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: border-color 1s ease;
+    }
+
+    .image-form {
+      position: relative;
+      height: 250px;
+    }
+  
+    .image-preview {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+  
+    .preview-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+  
+    .remove-form {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      background-color: transparent; 
+      padding: 0px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+
+    .image-div > br { 
+        display: none; 
+    }
+
     #suggestions {
         top: 100%;
         left: 0;
@@ -211,9 +292,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const imageDivs = document.querySelectorAll('.image-container');
-        
+    let formIdx = {{ formset.total_form_count|default:0 }};
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const imageDivs = document.querySelectorAll('.image-div');
         imageDivs.forEach(div => {
           const children = Array.from(div.childNodes);
           children.forEach(child => {
@@ -223,6 +305,49 @@
           });
         });
     });
+    
+
+    function addForm() {
+        const formHtml = `
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div class="frame-container new-form">
+                    <div class="image-form">
+                        <div class="form-outline image-div"> 
+                            <input type="file" name="form-${formIdx}-image" accept="image/*" id="id_form-${formIdx}-image">
+                            <input type="hidden" name="form-${formIdx}-id" id="id_form-${formIdx}-id">
+                            <input type="checkbox" name="form-${formIdx}-DELETE" id="id_form-${formIdx}-DELETE">
+                        </div> 
+                        <div class="image-preview"></div>
+                        <button type="button" class="btn remove-form"><i class="far fa-trash-alt" style="color: #45558A;"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        $('#imageContainer').append(formHtml);
+        formIdx++;
+        updateTotalForms();
+
+        $('.new-form').addClass("highlight");
+        $('.new-form')[0].scrollIntoView({ behavior: 'smooth' });
+        setTimeout(function() { $('.new-form').removeClass("highlight").removeClass("new-form"); }, 1000);
+    }
+
+    $('#addImage').click(function () {
+        addForm();
+    });
+
+    $('#imageContainer').on('click', '.remove-form', function () {
+        const instanceId = $(this).data('instance-id');
+        const row = $(this).closest('.image-form').parent().parent();
+        const deleteInput = row.find('[name$="-DELETE"]');
+        row.hide();
+        deleteInput.prop('checked', true);
+        updateTotalForms();
+    });
+
+    const updateTotalForms = () => {
+        $('#id_form-TOTAL_FORMS').val($('#imageContainer .image-form').length);
+    }
+
 
     const setValue = (e, selectedId) => {
         var suggestions = e.parentNode;
@@ -237,6 +362,21 @@
     };
     
     $(document).ready(function() {
+        updateTotalForms();
+        $('#imageContainer').on('change', 'input[type="file"]', function (event) {
+            const input = $(this)[0];
+            const previewDiv = $(this).parent().siblings('.image-preview');
+            previewDiv.empty();
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = $('<img>').attr('src', e.target.result).addClass('preview-img');
+                    previewDiv.append(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
         $('.search-input').keyup(function() {
             var suggestions = $(this).siblings('#suggestions');
             var searchInput = $(this);
@@ -268,36 +408,8 @@
                 suggestions.hide();
             }
         });
-
-        const paymentTypeSelect = document.querySelector('#id_payment_type');  // Use the correct ID of your payment_type select
-        const referenceInput = document.querySelector('#id_ref');  // Use the correct ID of your ref input field
-
-        // Function to toggle the disabled state of the reference field
-        function toggleReferenceField() {
-            const selectedText = paymentTypeSelect.options[paymentTypeSelect.selectedIndex].text;
-
-            console.log(selectedText)
-            if (selectedText === 'Chèque') {
-                referenceInput.disabled = false;
-                referenceInput.classList.remove('input-disabled'); 
-            } else {
-                referenceInput.disabled = true;
-                referenceInput.value = ''; 
-                referenceInput.classList.add('input-disabled');
-            }
-        }
-
-        // Initial check
-        toggleReferenceField();
-
-        // Add event listener for changes
-        paymentTypeSelect.addEventListener('change', toggleReferenceField);
         
-        $('form').submit(function (event) {
-            event.preventDefault();
-            $('[disabled]').removeAttr('disabled');
-            this.submit(); 
-        });
+        $('form').submit(function () { $('[disabled]').removeAttr('disabled'); });
     });
 </script>
 {% endblock %}

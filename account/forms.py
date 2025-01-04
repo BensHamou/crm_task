@@ -17,8 +17,6 @@ def getAttrs(type, placeholder='', other={}):
         'controlSearchReq': {'class': 'form-control search-input', 'autocomplete': "off", 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'search': {'class': 'form-control mb-lg-0 mb-3', 'style': 'padding-left: 30px; margin-right: 10px; border-radius: 100px; max-width: 500px', 'type': 'text', 'placeholder': '', 'id': 'search'},
         'select': {'class': 'form-select', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
-        'select2': {'class': 'form-select select2', 'style': 'background-color: #ffffff; padding-left: 30px; width: 100%; border-radius: 100px;'},
-        'select3': {'class': 'form-select select3', 'style': 'background-color: #ffffff; padding-left: 30px; width: 100%; border-radius: 100px;'},
         'date': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
         'dateReq': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;'},
         'time': {'type': 'time', 'class': 'form-control timeinput', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},

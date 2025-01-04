@@ -2,163 +2,141 @@
 {% load humanize %}
 
 {% block title %}
-    Détails du paiement
+    Détails du tâche
 {% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-left mb-3" style="padding: 0 25px;">
     <a href="javascript:void(0);" 
-       onclick="window.location=constructUrl('{% url 'payments' %}')" 
+       onclick="window.location=constructUrl('{% url 'tasks' %}')" 
        class="text-decoration-none d-flex align-items-center" 
        style="letter-spacing: 1.2px;">
         <i class="fas fa-arrow-left" style="color: #060747; margin-right: 25px"></i>
     </a>
-    <p class="lead m-0 p-0 page-title" style="color: #060747; font-weight: 600">Paiement ID[{{ payment.id|stringformat:"04d" }}] ({{ payment.state }})</p>
+    <p class="lead m-0 p-0 page-title" style="color: #060747; font-weight: 600">Tâche ID[{{ task.id|stringformat:"04d" }}] ({{ task.state }})</p>
 
     {% if is_admin %}
         <div class="d-flex justify-content-end ml-auto">
-            <a href="javascript:void(0);" onclick="window.location=constructUrl('{% url 'edit_payment' payment.id %}')" 
-            class="btn btn-list ml-lg-3 mt-lg-0 mt-2">
-                <span class="d-none d-sm-inline p-3">Modifier</span>
-                <i class="fas fa-edit d-inline d-sm-none p-3"></i>
+            <a href="javascript:void(0);" onclick="window.location=constructUrl('{% url 'edit_task' task.id %}')" 
+            class="btn ml-lg-3 mt-2">
+                <i class="fas fa-edit d-inline p-3"></i>
             </a>
-            <button type="button" class="btn btn-list ml-lg-3 mt-lg-0 mt-2" data-toggle="modal" data-target="#validationsModal">
-                <span class="d-none d-sm-inline p-3">Cycle</span>
-                <i class="fas fa-arrows-spin d-inline d-sm-none p-3"></i>
-            </button>
         </div>
-    {% elif is_commercial and payment.commercial == user %}
+    {% elif task.create_uid == user %}
         <div class="d-flex justify-content-end ml-auto">
-            {% if is_draft_or_refused %}
-                <a href="javascript:void(0);" onclick="window.location=constructUrl('{% url 'edit_payment' payment.id %}')" 
-                class="btn btn-list ml-lg-3 mt-lg-0 mt-2">
-                    <span class="d-none d-sm-inline p-3">Modifier</span>
-                    <i class="fas fa-edit d-inline d-sm-none p-3"></i>
-                </a>
-            {% endif %}
-            <button type="button" class="btn btn-list ml-lg-3 mt-lg-0 mt-2" data-toggle="modal" data-target="#validationsModal">
-                <span class="d-none d-sm-inline p-3">Cycle</span>
-                <i class="fas fa-arrows-spin d-inline d-sm-none p-3"></i>
-            </button>
+            <a href="javascript:void(0);" onclick="window.location=constructUrl('{% url 'edit_task' task.id %}')" 
+            class="btn ml-lg-3 mt-lg-0 mt-2">
+            <i class="fas fa-edit d-inline p-3"></i>
+            </a>
         </div>
     {% endif %}
 </div>
 
 <div class="table-responsive" style="padding: 15px;">
     <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Commercial</label>
-            <p class="form-control">{{ payment.commercial }}</p>
+        <div class="col-lg-12 col-md-12 mb-2">
+            <label class="form-label">Designation</label>
+            <p class="custom-text-box">{{ task.designation }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Zone</label>
-            <p class="form-control">{{ payment.zone }}</p>
+            <label class="form-label">Utilisateur</label>
+            <p class="custom-text-box">{{ task.create_uid }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Client</label>
-            <p class="form-control">{{ payment.client }}</p>
+            <label class="form-label">Créer le</label>
+            <p class="custom-text-box">{{ task.date_created }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Payeur</label>
-            <p class="form-control">{{ payment.payer }}</p>
+            <label class="form-label">Equipe Commerciale</label>
+            <p class="custom-text-box">{{ task.comm_team }}</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <label class="form-label">Type de Tâche</label>
+            <p class="custom-text-box">{{ task.task_type }}</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <label class="form-label">Wilaya</label>
+            <p class="custom-text-box">{{ task.wilaya }}</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <label class="form-label">Projet</label>
+            <p class="custom-text-box">{{ task.project|default:'/' }}</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <label class="form-label">Client, prospect ou contact</label>
+            <p class="custom-text-box">{{ task.client|default:'/' }}</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <label class="form-label">Piste</label>
+            <p class="custom-text-box">{{ task.lead|default:'/' }}</p>
         </div>
     </div>
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Banque Client</label>
-            <p class="form-control">{{ payment.bank }}</p>
+            <label class="form-label">Date création</label>
+            <p class="custom-text-box">{{ task.date_task }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Date récupération paiement</label>
-            <p class="form-control">{{ payment.date }}</p>
+            <label class="form-label">Date prévue</label>
+            <p class="custom-text-box">{{ task.date_scheduler|default:'/' }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Banque Dépot</label>
-            <p class="form-control">{{ payment.bank_depot }}</p>
+            <label class="form-label">Date réalisée</label>
+            <p class="custom-text-box">{{ task.date_done|default:'/' }}</p>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Date de Dépot</label>
-            <p class="form-control">{{ payment.date_depot }}</p>
+            <label class="form-label">L'intervalle date prevue et date réalisée</label>
+            <p class="custom-text-box">{{ task.delais_late|default:'/' }}</p>
         </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Type de versement</label>
-            <p class="form-control">{{ payment.payment_type }}</p>
+        <div class="col-lg-6 col-md-12 mb-2">
+            <label class="form-label">Description</label>
+            <p class="custom-text-box">{{ task.description|default:'/' }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Référence</label>
-            <p class="form-control">{% if payment.ref %}{{ payment.ref }}{% else %}/{% endif %}</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Montant</label>
-            <p class="form-control">{{ payment.amount|intcomma }} DZD</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label form-obs">Observation</label>
-            <p class="form-control">{% if payment.observation %}{{ payment.observation }}{% else %}/{% endif %}</p>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-6 col-md-6 mb-2">
-            <label class="form-label">Chèque (Image)</label>
-            </br>
-            {% if payment.check_image %}
-                <img src="{{ payment.check_image.url }}" alt="Check Image" class="img-fluid"/>
-            {% else %}
-                <p>Aucune image</p>
-            {% endif %}
-        </div>
-        <div class="col-lg-6 col-md-6 mb-2">
-            <label class="form-label">Dépot de chèque (Image)</label>
-            </br>
-            {% if payment.deposit_image %}
-                <img src="{{ payment.deposit_image.url }}" alt="Dépot Image" class="img-fluid"/>
-            {% else %}
-                <p>Aucune image</p>
-            {% endif %}
+        <div class="col-lg-6 col-md-12 mb-2">
+            <label class="form-label">Résumé</label>
+            <p class="custom-text-box">{{ task.resume|default:'/' }}</p>
         </div>
     </div>
 </div>
 
 <div class="d-flex justify-content-center" style="padding: 15px;">
-    {% if is_draft_or_refused and is_admin %}
-    <button class="btn-validate mr-2" onclick="confirmPayment('{{ payment.id }}')">{% if payment.state == 'Refusé' %}Corriger{% else %}Confirmer{% endif %}</button>
-        <button class="btn-cancel" onclick="cancelPayment('{{ payment.id }}')">Annuler</button>
-    {% elif is_admin and is_confirmed %}
-        <button class="btn-validate mr-2" onclick="validatePayment('{{ payment.id }}')">Valider</button>
-        <button class="btn-cancel" onclick="refusePayment('{{ payment.id }}')">Refuser</button>
-    {% endif %}
-    {% if is_draft_or_refused and is_commercial and user == payment.commercial %}
-        <button class="btn-validate mr-2" onclick="confirmPayment('{{ payment.id }}')">{% if payment.state == 'Refusé' %}Corriger{% else %}Confirmer{% endif %}</button>
-        <button class="btn-cancel" onclick="cancelPayment('{{ payment.id }}')">Annuler</button>
-    {% elif is_back_office and is_confirmed %}
-        <button class="btn-validate mr-2" onclick="validatePayment('{{ payment.id }}')">Valider</button>
-        <button class="btn-cancel" onclick="refusePayment('{{ payment.id }}')">Refuser</button>
+    {% if user.has_admin %}
+        {% if task.state == 'A Faire' %}
+            <button class="btn-validate" onclick="doneTask('{{ task.id }}')">Terminée</button>
+        {% else %}
+            <button class="btn-cancel" onclick="draftTask('{{ task.id }}')">A Faire</button>
+        {% endif %}
+    {% elif user.has_commercial and task.create_uid == user %}
+        {% if task.state == 'A Faire' %}
+            <button class="btn-validate" onclick="doneTask('{{ task.id }}')">Terminée</button>
+        {% else %}
+            <button class="btn-cancel" onclick="draftTask('{{ task.id }}')">A Faire</button>
+        {% endif %}
     {% endif %}
 </div>
-{% include 'modal.html' %}
 
 <style>
     .form-label{
         color: #343434; 
         font-weight: 600;
     }
-    .form-control{
-        background-color: #ffffff; 
-        padding-left: 30px; 
-        border-radius: 100px;
-    }
-    .form-obs{
-        border-radius: 50px;
+    .custom-text-box{
+        display: block;
+        padding: 0.375rem 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.9rem;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        background-color: #ffffff;
     }
 </style>
 
 <script>
-    function confirmPayment(paymentId) {
+    function doneTask(taskId) {
         swal({
-            title: "Confirmer le paiement",
-            text: "Êtes-vous sûr de vouloir confirmer ce paiement ?",
+            title: "Terminer la tâche",
+            text: "Êtes-vous sûr de vouloir terminer cette tâche ?",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -169,7 +147,7 @@
             if (willConfirm) {
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'confirm_payment' 0 %}".replace('0', paymentId),
+                    url: "{% url 'done_task' 0 %}".replace('0', taskId),
                     data: {
                         csrfmiddlewaretoken: '{{ csrf_token }}',
                     },
@@ -191,21 +169,21 @@
         });
     }
     
-    function cancelPayment(paymentId) {
+    function draftTask(taskId) {
         swal({
-            title: "Annuler le paiement",
-            text: "Êtes-vous sûr de vouloir annuler ce paiement ?",
+            title: "Annuler la tâche",
+            text: "Êtes-vous sûr de vouloir remettre en attente de validation cette tâche ?",
             icon: "warning",
             buttons: true,
             dangerMode: true,
             confirmButtonText: "Oui",
             cancelButtonText: "Non",
         })
-        .then((willCancel) => {
-            if (willCancel) {
+        .then((willConfirm) => {
+            if (willConfirm) {
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'cancel_payment' 0 %}".replace('0', paymentId),
+                    url: "{% url 'draft_task' 0 %}".replace('0', taskId),
                     data: {
                         csrfmiddlewaretoken: '{{ csrf_token }}',
                     },
@@ -223,85 +201,6 @@
                         swal("Erreur!", "Une erreur s'est produite. Veuillez réessayer.", "error");
                     }
                 });
-            }
-        });
-    }
-    
-    function validatePayment(paymentId) {
-        swal({
-            title: "Valider le paiement",
-            text: "Êtes-vous sûr de vouloir valider ce paiement ?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            confirmButtonText: "Oui",
-            cancelButtonText: "Non",
-        })
-        .then((willValidate) => {
-            if (willValidate) {
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'validate_payment' 0 %}".replace('0', paymentId),
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal("Succès!", response.message, "success")
-                            .then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Erreur!", response.message, "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Erreur!", "Une erreur s'est produite. Veuillez réessayer.", "error");
-                    }
-                });
-            }
-        });
-    }
-    
-    function refusePayment(paymentId) {
-        swal({
-            title: "Refuser le paiement",
-            text: "Veuillez entrer le motif de refus :",
-            content: {
-                element: "input",
-                attributes: {
-                    placeholder: "Motif de refus",
-                    type: "text",
-                },
-            },
-            buttons: true,
-            dangerMode: true,
-        })
-        .then((refusalReason) => {
-            if (refusalReason) {
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'refuse_payment' 0 %}".replace('0', paymentId),
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                        refusal_reason: refusalReason,
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal("Succès!", response.message, "success")
-                            .then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Erreur!", response.message, "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Erreur!", "Une erreur s'est produite. Veuillez réessayer.", "error");
-                    }
-                });
-            } else {
-                swal("Erreur!", "Motif de refus requis.", "error");
             }
         });
     }

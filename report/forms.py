@@ -13,9 +13,9 @@ class TaskForm(BaseModelForm):
 
     comm_team = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq', 'Equipe Commerciale')))
     task_type = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq', 'Type de tâche')))
-    project = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Projet')), required=False)
-    lead = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Piste')), required=False)
-    client = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Client, prospect ou contact')), required=False)
+    project = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearch', 'Projet')), required=False)
+    lead = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearch', 'Piste')), required=False)
+    client = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearch', 'Client, prospect ou contact')), required=False)
     wilaya = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq', 'Wilaya')))
 
     comm_team_id = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlIDReq','ID de l\'équipe de communication')))

@@ -30,12 +30,10 @@
             line-height: 22px;
             color: #23378d;
         }
-        .login-left {
-            background-image: url('{% static "img/left_login.png" %}');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: #f6f6f6;
+        .container-fluid{
+            background: rgb(51,78,177);
+            background: linear-gradient(122deg, rgba(51,78,177,0.2660713943780637) 3%, rgba(43,221,64,0.1680321786917892) 97%);
+            backdrop-filter: blur(8.8px);
         }
         
         .welcome {
@@ -74,35 +72,29 @@
                 color: #23378d;
             }
         }
-
-        @media (max-width: 768px){
-            .container-fluid {
-                background-image: url('{% static "img/background_log.png" %}');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-            }
-        }
+        
 
     </style>
 </head>
 <body>
-    <div class="container-fluid bg-white d-flex m-0 p-0" style="height: 94vh;">
-        <div class="col-lg-8 d-none d-lg-block login-left">
-        </div>
-        <div class="col-lg-4 col-12">
-            <div class="row justify-content-center d-lg-none" style="height: 10vh;">
+    <div class="container-fluid d-flex justify-content-center m-0 p-0" style="height: 94vh;">
+        <div class="col-lg-4 col-12" style="border-radius: 15px; background: rgba(255, 255, 255, 0.2);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(255, 255, 255, 0.3);">
+            <div class="row justify-content-center d-lg-none" style="height: 25vh;">
                 <div class="col-12 text-center">
-                    <img src="{% static 'img/logo_puma.png' %}" alt="Logo" class="img-fluid" style="max-height: 50px;">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="img-fluid" style="max-height: 150px;">
                 </div>
             </div>
-            <div class="row justify-content-center d-none d-lg-block" style="height: 16vh;">
+            <div class="row justify-content-center d-none d-lg-block" style="height: 25vh;">
                 <div class="col-12 p-5 text-left">
                     <p class='welcome'>Bienvenue</p>
                     <p class='connect'>Se connecter a votre compte</p>
                 </div>
             </div>
-    
             <div class="row justify-content-center m-0 p-0" style="height: 60vh;">
                 <form method="POST"  class="col-12 d-flex flex-column justify-content-center" style="height: 50vh;" id="login-form">
                         {% csrf_token %}
@@ -131,24 +123,13 @@
                     </div>
                 </div> 
             </div>
-            <div class="row justify-content-center align-items-center" style="height: 10vh;">
-                <div class="col-10">
-                    <div class="row row-cols-5 row-cols-md-10 text-center">
-                        {% for i in '0123456789' %}
-                            <div class="col p-2">
-                                <img src="{% static 'motifs/motif_'|add:i|add:'.png' %}" alt="Motif {{ i }}" class="img-fluid" style="max-height: 50px;">
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    <footer class="row text-white align-items-center m-0" style="height: 6vh; background-color: #53af32;">
-        <div class="col-6 text-left">
-            <p class="mb-0">Garantie pour la construction</p>
+    <footer class="row text-white align-items-center m-0" style="height: 6vh; background-color: #efefef;">
+        <div class="col-10 text-left">
+            <p class="mb-0" style="color: #23378d; font-weight: 500;">Groupe Des Sociétés Hasnaoui</p>
         </div>
-        <div class="col-6 text-right">
+        <div class="col-2 text-right">
             <img src="{% static 'img/footer.png' %}" alt="Footer Logo" class="img-fluid" style="max-height: 40px;">
         </div>
     </footer>

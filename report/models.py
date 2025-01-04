@@ -27,7 +27,7 @@ class Task(BaseModel):
     lead_id = models.IntegerField(blank=True, null=True)
     lead = models.CharField(max_length=255, blank=True, null=True)
 
-    willaya_id = models.IntegerField(blank=True, null=True)
+    wilaya_id = models.IntegerField(blank=True, null=True)
     wilaya = models.CharField(max_length=255, blank=True, null=True)
 
     date_task = models.DateTimeField(blank=True, null=True)
@@ -47,7 +47,7 @@ class Task(BaseModel):
 def get_image_filename(instance, filename):
     title = instance.task.designation
     slug = slugify(title)
-    return f'task_images/{slug}-{filename} [{instance.id}]'
+    return f'task_images/{slug}-{filename}'
 
 class Image(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='images')
