@@ -130,34 +130,65 @@
                 {% endif %}
             </div>
         </div>
-        <div class="card mt-4 custom-card">
-            <div class="card-header card-header-secondary d-flex justify-content-between align-items-center">
-                <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Pièces jointes</p>
-                <button type="button" class="btn btn-primary" id="addImage">Ajouter un élément</button>
-            </div>
-            <div class="row m-4" id="imageContainer">
-                {{ formset.management_form }}
-                {% for form in formset %}
-                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                        <div class="frame-container">
-                            <div class="image-form">
-                                <div class="form-outline image-div">
-                                    {{ form.image }}
-                                    {{ form.id }}
-                                    {{ form.DELETE }}
-                                </div>
-                                <div class="image-preview">
-                                    {% if form.instance.pk %}
-                                        <img src="{{ form.instance.image.url }}" alt="Image Preview" class="preview-img">
-                                    {% endif %}
-                                </div>
-                                <button type="button" class="btn remove-form" data-instance-id="{{ form.instance.pk }}"><i class="far fa-trash-alt" style="color: #45558A;"></i></button>
-                            </div>
-                        </div>
+
+        <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="attachments-tab" data-bs-toggle="tab" data-bs-target="#attachments" type="button" role="tab" aria-controls="attachments" aria-selected="true">
+                    Pièces jointes
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="localisation-tab" data-bs-toggle="tab" data-bs-target="#localisation" type="button" role="tab" aria-controls="localisation" aria-selected="false">
+                    Localisation
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
+                <div class="card custom-card">
+                    <div class="card-header card-header-secondary d-flex justify-content-between align-items-center">
+                        <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Pièces jointes</p>
+                        <button type="button" class="btn btn-primary" id="addImage">Ajouter un élément</button>
                     </div>
-                {% endfor %}
+                    <div class="row m-4" id="imageContainer">
+                        {{ formset.management_form }}
+                        {% for form in formset %}
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <div class="frame-container">
+                                    <div class="image-form">
+                                        <div class="form-outline image-div">
+                                            {{ form.image }}
+                                            {{ form.id }}
+                                            {{ form.DELETE }}
+                                        </div>
+                                        <div class="image-preview">
+                                            {% if form.instance.pk %}
+                                                <img src="{{ form.instance.image.url }}" alt="Image Preview" class="preview-img">
+                                            {% endif %}
+                                        </div>
+                                        <button type="button" class="btn remove-form" data-instance-id="{{ form.instance.pk }}">
+                                            <i class="far fa-trash-alt" style="color: #45558A;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="localisation" role="tabpanel" aria-labelledby="localisation-tab">
+                <div class="card custom-card">
+                    <div class="card-header card-header-secondary">
+                        <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Localisation</p>
+                    </div>
+                    <div id="map" style="height: 400px;"></div>
+                    {{ form.google_maps_coords }}
+                </div>
             </div>
         </div>
+
         <div class="row m-0">
             <div class="col-12 text-center m-0 mt-2">
                 <button type="submit" form="task-form" class="btn-list-sm d-lg-none">{% if form.instance.pk %}Sauvegarder{% else %}Ajouter une tâche{% endif %}</button>
@@ -290,6 +321,8 @@
     }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
     let formIdx = {{ formset.total_form_count|default:0 }};
@@ -306,7 +339,6 @@
         });
     });
     
-
     function addForm() {
         const formHtml = `
             <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
@@ -411,5 +443,29 @@
         
         $('form').submit(function () { $('[disabled]').removeAttr('disabled'); });
     });
+
+    const coordsInput = document.getElementById('id_google_maps_coords').value;
+
+
+    const defaultCoords = [36.752887, 3.042048];
+    const initialCoords = coordsInput
+    ? coordsInput.split(',').map(coord => parseFloat(coord))
+    : defaultCoords;
+
+    var map = L.map('map').setView(initialCoords, 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    var marker = L.marker(initialCoords, { draggable: true }).addTo(map);
+
+    marker.on('dragend', function (event) {
+        var lat = marker.getLatLng().lat.toFixed(6);
+        var lng = marker.getLatLng().lng.toFixed(6);
+        document.getElementById('id_google_maps_coords').value = `${lat},${lng}`;
+    });
+
 </script>
 {% endblock %}

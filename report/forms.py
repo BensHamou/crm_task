@@ -32,7 +32,7 @@ class TaskForm(BaseModelForm):
 
     description = forms.CharField(widget=forms.Textarea(attrs=getAttrs('textarea', 'Description')), required=False)
     resume = forms.CharField(widget=forms.Textarea(attrs=getAttrs('textarea', 'Résumé')), required=False)
-    google_maps_coords = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Coordonnées Google Maps')), required=False)
+    google_maps_coords = forms.CharField(widget=forms.HiddenInput(attrs=getAttrs('control', 'Coordonnées Google Maps')), required=False)
 
 
 class ImageForm(BaseModelForm):
