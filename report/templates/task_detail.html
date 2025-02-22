@@ -38,6 +38,16 @@
             <label class="form-label">Designation</label>
             <p class="custom-text-box">{{ task.designation }}</p>
         </div>
+        <div class="col-lg-6 col-md-6 mb-2">
+            <label class="form-label">Date de début</label>
+            <p class="custom-text-box">{{ task.date_task }}</p>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-2">
+            {% if task.state == 'Fait' %}
+                <label class="form-label">Date réalisée</label>
+                <p class="custom-text-box">{{ task.date_done|default:'/' }}</p>
+            {% endif %}
+        </div>
         <div class="col-lg-3 col-md-6 mb-2">
             <label class="form-label">Utilisateur</label>
             <p class="custom-text-box">{{ task.create_uid }}</p>
@@ -72,22 +82,6 @@
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Date création</label>
-            <p class="custom-text-box">{{ task.date_task }}</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Date prévue</label>
-            <p class="custom-text-box">{{ task.date_scheduler|default:'/' }}</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Date réalisée</label>
-            <p class="custom-text-box">{{ task.date_done|default:'/' }}</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">L'intervalle date prevue et date réalisée</label>
-            <p class="custom-text-box">{{ task.delais_late|default:'/' }}</p>
-        </div>
         <div class="col-lg-6 col-md-12 mb-2">
             <label class="form-label">Description</label>
             <p class="custom-text-box">{{ task.description|default:'/' }}</p>

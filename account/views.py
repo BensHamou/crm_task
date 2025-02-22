@@ -14,9 +14,11 @@ from .forms import *
 import requests
 import calendar
 import json
-
+from report.utils import connect_odoo
 
 # USERS
+
+db, uid, models, password = connect_odoo()
 
 @login_required(login_url='login')
 @admin_only_required
@@ -42,6 +44,23 @@ def refreshUserList(request):
             user.save()
     else:
         print('Erreur : could not fetch data from API.')
+    
+    fields = ['id', 'name']
+    commercial_teams = models.execute_kw(db, uid, password, 'crm.case.section', 'search_read', [], {'fields': fields })
+    for team in commercial_teams:
+        CRMTeam.objects.get_or_create(odoo_id=team['id'], name=team['name'])
+    
+    fields = ['id', 'login', 'section_manager_ids']
+    for user in User.objects.all():
+        user.teams.clear()
+        teams = models.execute_kw(db, uid, password, 'res.users', 'search_read', [[['login', '=', user.email.lower()]]], {'fields': fields, 'limit': 1})
+        if not teams:
+            continue
+        for t in teams[0]['section_manager_ids']:
+            new_team = CRMTeam.objects.get(odoo_id=t)
+            user.teams.add(new_team)
+        user.save()
+
     cache_param = str(uuid.uuid4())
     url_path = reverse('users')
     redirect_url = f'{url_path}?cache={cache_param}'

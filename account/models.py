@@ -19,6 +19,12 @@ class Setting(BaseModel):
 
     def __str__(self):
         return f"{self.name} : {self.value}"
+
+class CRMTeam(BaseModel):
+    name = models.CharField(max_length=50)
+    odoo_id = models.IntegerField(default=0)
+    def __str__(self):
+        return self.name
     
 class User(BaseModel, AbstractUser):
     ROLE_CHOICES = [
@@ -31,6 +37,8 @@ class User(BaseModel, AbstractUser):
     fullname = models.CharField(max_length=255)
     role = models.CharField(choices=ROLE_CHOICES, max_length=30)
     is_admin = models.BooleanField(default=False)
+    teams = models.ManyToManyField(CRMTeam, related_name='users', blank=True)
+
 
     def __str__(self):
         return self.fullname

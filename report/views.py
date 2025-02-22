@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from .utils import *
 from django.forms import modelformset_factory
 from .utils import connect_odoo
+from django.utils import timezone
 
 db, uid, models, password = connect_odoo()
 
@@ -87,10 +88,10 @@ def deleteTaskView(request, id):
 @login_required(login_url='login')
 @comm_app_required
 def createTaskView(request):
-    form = TaskForm()
+    form = TaskForm(user=request.user)
     ImageFormSet = modelformset_factory(Image,form=ImageForm, extra=0, can_delete=True)
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, user=request.user)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
         if form.is_valid() and formset.is_valid():
             task = form.save(commit=False, user=request.user)
@@ -120,10 +121,10 @@ def createTaskView(request):
 @check_creator
 def editTaskView(request, id):
     task = Task.objects.get(id=id)
-    form = TaskForm(instance=task)
+    form = TaskForm(instance=task, user=request.user)
     ImageFormSet = modelformset_factory(Image,form=ImageForm, extra=0, can_delete=True)
     if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES, instance=task)
+        form = TaskForm(request.POST, request.FILES, instance=task, user=request.user)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.filter(task=task))
         if form.is_valid() and formset.is_valid():
             task = form.save(commit=False, user=request.user)
@@ -160,6 +161,7 @@ def doneTask(request, id):
         return JsonResponse({'success': True, 'message': 'Tâche déjà marquée comme fait'})
     
     task.state = 'Fait'
+    task.date_done = timezone.now()
     task.save()
     return JsonResponse({'success': True, 'message': 'Tâche marquée comme fait'})
 
@@ -199,7 +201,6 @@ def live_search(request):
     fields = ['id', 'name']
 
     search_for_mapping = {
-        'comm_team': ['crm.case.section', domain, fields],
         'task_type': ['crm.task.type', domain, fields],
         'project': ['crm.project', domain, fields],
         'lead': ['crm.lead', domain, fields],

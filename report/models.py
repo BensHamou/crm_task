@@ -11,9 +11,9 @@ class Task(BaseModel):
         ('Fait', 'Fait')
     ]
 
+    comm_team = models.ForeignKey(CRMTeam, on_delete=models.CASCADE, related_name='tasks')
+
     designation = models.CharField(max_length=50)
-    comm_team_id = models.IntegerField(blank=True, null=True)
-    comm_team = models.CharField(max_length=255)
 
     task_type_id = models.IntegerField(blank=True, null=True)
     task_type = models.CharField(max_length=255)
@@ -31,9 +31,7 @@ class Task(BaseModel):
     wilaya = models.CharField(max_length=255, blank=True, null=True)
 
     date_task = models.DateTimeField(blank=True, null=True)
-    date_scheduler = models.DateTimeField(blank=True, null=True)
     date_done = models.DateTimeField(blank=True, null=True)
-    delais_late = models.DateTimeField(blank=True, null=True)
 
     description = models.TextField(blank=True, null=True)
     resume = models.TextField(blank=True, null=True)

@@ -1,7 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from datetime import datetime
 from django import forms
 from .models import *
 from django import forms
@@ -17,6 +15,7 @@ def getAttrs(type, placeholder='', other={}):
         'controlSearchReq': {'class': 'form-control search-input', 'autocomplete': "off", 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'search': {'class': 'form-control mb-lg-0 mb-3', 'style': 'padding-left: 30px; margin-right: 10px; border-radius: 100px; max-width: 500px', 'type': 'text', 'placeholder': '', 'id': 'search'},
         'select': {'class': 'form-select', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
+        'select2': {'class': 'form-select select2', 'style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;'},
         'date': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
         'dateReq': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;'},
         'time': {'type': 'time', 'class': 'form-control timeinput', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
@@ -48,13 +47,15 @@ class BaseModelForm(ModelForm):
 class UserForm(BaseModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_admin', 'first_name', 'last_name', 'role']
+        fields = ['username', 'email', 'is_admin', 'first_name', 'last_name', 'role', 'teams']
 
     username = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Nom d\'utilisateur')), disabled=True)
     last_name = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Nom de famille')), disabled=True)
     first_name = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Prénom')), disabled=True)
     email = forms.EmailField(widget=forms.EmailInput(attrs=getAttrs('control', 'Email')), disabled=True)
     role = forms.ChoiceField(choices=User.ROLE_CHOICES, widget=forms.Select(attrs=getAttrs('select')))
+    teams = forms.ModelMultipleChoiceField(queryset=CRMTeam.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'form-select select2'}), required=False)
+
     is_admin = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={
         'type': 'checkbox',
         'data-onstyle': 'primary',

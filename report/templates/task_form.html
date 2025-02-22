@@ -22,7 +22,7 @@
     {% csrf_token %}
     <div class="table-responsive" style="padding: 15px;">
         <div class="row mb-4">
-            <div class="col-lg-12 col-md-12 mb-2">
+            <div class="col-lg-6 col-md-6 mb-2">
                 <label class="form-label" style="color: #343434; font-weight: 600;">Designation</label>
                 {{ form.designation }}
                 {% if form.designation.errors %}
@@ -30,13 +30,15 @@
                 {% endif %}
             </div>
             <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date début</label>
+                {{ form.date_task }}
+                {% if form.date_task.errors %}
+                    <small class="text-danger">{{ form.date_task.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
                 <label class="form-label" style="color: #343434; font-weight: 600;">Equipe Commerciale</label>
                 {{ form.comm_team }}
-                {{ form.comm_team_id }}
-                <div id="suggestions" class="sugdiv"></div>
-                {% if form.comm_team.errors %}
-                    <small class="text-danger">{{ form.comm_team.errors }}</small>
-                {% endif %}
             </div>
             <div class="col-lg-6 col-md-6 mb-2">
                 <label class="form-label" style="color: #343434; font-weight: 600;">Projet</label>
@@ -81,36 +83,6 @@
                 <div id="suggestions" class="sugdiv"></div>
                 {% if form.client.errors %}
                     <small class="text-danger">{{ form.client.errors }}</small>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-lg-6 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date création</label>
-                {{ form.date_task }}
-                {% if form.date_task.errors %}
-                    <small class="text-danger">{{ form.date_task.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-6 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date prévue</label>
-                {{ form.date_scheduler }}
-                {% if form.date_scheduler.errors %}
-                    <small class="text-danger">{{ form.date_scheduler.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-6 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date réalisée</label>
-                {{ form.date_done }}
-                {% if form.date_done.errors %}
-                    <small class="text-danger">{{ form.date_done.errors }}</small>
-                {% endif %}
-            </div>
-            <div class="col-lg-6 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">L'intervalle date prevue et date réalisée</label>
-                {{ form.delais_late }}
-                {% if form.delais_late.errors %}
-                    <small class="text-danger">{{ form.delais_late.errors }}</small>
                 {% endif %}
             </div>
         </div>
