@@ -15,8 +15,7 @@ from django.forms import modelformset_factory
 from .utils import connect_odoo
 from django.utils import timezone
 
-# db, uid, models, password = connect_odoo()
-db, uid, models, password = None, None, None, None
+db, uid, models, password = connect_odoo()
 
 # DECORATORS
 

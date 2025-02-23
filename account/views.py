@@ -18,9 +18,7 @@ from report.utils import connect_odoo
 
 # USERS
 
-# db, uid, models, password = connect_odoo()
-
-db, uid, models, password = None, None, None, None
+db, uid, models, password = connect_odoo()
 
 @login_required(login_url='login')
 @admin_only_required
