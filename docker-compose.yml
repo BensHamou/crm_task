@@ -24,8 +24,8 @@ services:
     ports:
       - "8029:8029"
     volumes:
-      - ./crm_task:/crm_task  # Mount the app folder to sync code changes
-      - ./media:/app/media    # Ensure media files persist on the host
+      - ./crm_task:/crm_task
+      - ./media:/app/media
     command: >
       sh -c "python manage.py makemigrations &&
          python manage.py migrate &&
@@ -48,4 +48,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.16.49.0/24
+        - subnet: 172.16.29.0/24
