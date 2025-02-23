@@ -90,6 +90,14 @@ DATABASES = {
     #  'HOST': '127.0.0.1',
     #  'PORT': '5432',
     # },
+    # 'default': {
+    #  'ENGINE': 'django.db.backends.postgresql',
+    #  'NAME': 'CRMTask',
+    #  'USER': 'crm_task',
+    #  'PASSWORD': 'crm_task',
+    #  'HOST': '10.10.10.20',
+    #  'PORT': '5429',
+    # },
 }
 
 
