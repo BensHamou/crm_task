@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from django.contrib.auth import logout
-from datetime import date, timedelta
+from datetime import datetime
 from django.contrib import messages 
 from django.db.models import Sum
 from .decorators import *
@@ -31,7 +31,7 @@ def homeView(request):
 @admin_only_required
 def syncData(request):
 
-    print('Sychronisation des données...', date.now(), '...', request.user)
+    print('Sychronisation des données...', datetime.now(), '...', request.user)
 
     usernames = User.objects.values_list('username', flat=True)
     API_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
