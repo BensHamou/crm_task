@@ -20,7 +20,8 @@ def getAttrs(type, placeholder='', other={}):
         'dateReq': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #dad2ff; padding-left: 30px; border-radius: 100px;'},
         'time': {'type': 'time', 'class': 'form-control timeinput', 'style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;', 'placeholder': ''},
         'month': {'type': 'month', 'class': 'form-control dateinput','style': 'background-color: #ffffff; padding-left: 30px; border-radius: 100px;'},
-        'textarea': {"rows": "3", 'style': 'width: 100%', 'class': 'form-control', 'placeholder': '', 'style': 'padding-left: 30px; background-color: #ffffff; border-radius: 50px;'}
+        'textarea': {"rows": "3", 'style': 'width: 100%', 'class': 'form-control', 'placeholder': '', 'style': 'padding-left: 30px; background-color: #ffffff; border-radius: 20px;'},
+        'textareaReq': {"rows": "3", 'style': 'width: 100%', 'class': 'form-control', 'placeholder': '', 'style': 'padding-left: 30px; background-color: #dad2ff; border-radius: 20px;'}
     }
 
     if type in ATTRIBUTES:

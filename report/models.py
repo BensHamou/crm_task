@@ -11,12 +11,12 @@ class Task(BaseModel):
         ('Fait', 'Fait')
     ]
 
+    commercial = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     comm_team = models.ForeignKey(CRMTeam, on_delete=models.CASCADE, related_name='tasks')
+    task_type = models.ForeignKey(TaskType, on_delete=models.CASCADE, related_name='tasks')
+    wilaya = models.ForeignKey(Wilaya, on_delete=models.CASCADE, related_name='tasks')
 
     designation = models.CharField(max_length=50)
-
-    task_type_id = models.IntegerField(blank=True, null=True)
-    task_type = models.CharField(max_length=255)
 
     client_id = models.IntegerField(blank=True, null=True)
     client = models.CharField(max_length=255, blank=True, null=True)
@@ -26,9 +26,6 @@ class Task(BaseModel):
 
     lead_id = models.IntegerField(blank=True, null=True)
     lead = models.CharField(max_length=255, blank=True, null=True)
-
-    wilaya_id = models.IntegerField(blank=True, null=True)
-    wilaya = models.CharField(max_length=255, blank=True, null=True)
 
     date_task = models.DateTimeField(blank=True, null=True)
     date_done = models.DateTimeField(blank=True, null=True)

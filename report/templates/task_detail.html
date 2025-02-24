@@ -34,51 +34,53 @@
 
 <div class="table-responsive" style="padding: 15px;">
     <div class="row mb-4">
-        <div class="col-lg-12 col-md-12 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Designation</label>
             <p class="custom-text-box">{{ task.designation }}</p>
         </div>
-        <div class="col-lg-6 col-md-6 mb-2">
-            <label class="form-label">Date de début</label>
-            <p class="custom-text-box">{{ task.date_task }}</p>
-        </div>
-        <div class="col-lg-6 col-md-6 mb-2">
-            {% if task.state == 'Fait' %}
-                <label class="form-label">Date réalisée</label>
-                <p class="custom-text-box">{{ task.date_done|default:'/' }}</p>
-            {% endif %}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Utilisateur</label>
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Créer par</label>
             <p class="custom-text-box">{{ task.create_uid }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Affecté à</label>
+            <p class="custom-text-box">{{ task.commercial }}</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Créer le</label>
             <p class="custom-text-box">{{ task.date_created }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Equipe Commerciale</label>
-            <p class="custom-text-box">{{ task.comm_team }}</p>
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Date prévu</label>
+            <p class="custom-text-box">{{ task.date_task }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Date réalisé</label>
+            <p class="custom-text-box">{{ task.date_done|default:'/' }}</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Type de Tâche</label>
             <p class="custom-text-box">{{ task.task_type }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Equipe Commerciale</label>
+            <p class="custom-text-box">{{ task.comm_team }}</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+            <label class="form-label">Piste</label>
+            <p class="custom-text-box">{{ task.lead|default:'/' }}</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Wilaya</label>
             <p class="custom-text-box">{{ task.wilaya }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Projet</label>
             <p class="custom-text-box">{{ task.project|default:'/' }}</p>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
+        <div class="col-lg-4 col-md-6 mb-2">
             <label class="form-label">Client, prospect ou contact</label>
             <p class="custom-text-box">{{ task.client|default:'/' }}</p>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <label class="form-label">Piste</label>
-            <p class="custom-text-box">{{ task.lead|default:'/' }}</p>
         </div>
     </div>
     <div class="row mb-4">
@@ -89,6 +91,56 @@
         <div class="col-lg-6 col-md-12 mb-2">
             <label class="form-label">Résumé</label>
             <p class="custom-text-box">{{ task.resume|default:'/' }}</p>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="attachments-tab" data-bs-toggle="tab" data-bs-target="#attachments" type="button" role="tab" aria-controls="attachments" aria-selected="true">
+                Pièces jointes
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="localisation-tab" data-bs-toggle="tab" data-bs-target="#localisation" type="button" role="tab" aria-controls="localisation" aria-selected="false">
+                Localisation
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
+            <div class="card custom-card">
+                <div class="card-header card-header-secondary d-flex justify-content-between align-items-center">
+                    <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Pièces jointes</p>
+                </div>
+                <div class="row m-4">
+                    {% for image in task.images.all %}
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="frame-container">
+                                <div class="image-form">
+                                    <div class="image-preview">
+                                        <a href="{{ image.image.url }}" data-toggle="lightbox" data-gallery="gallery">
+                                            <img src="{{ image.image.url }}" alt="Image Preview" class="preview-img">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center">Aucune pièce jointe disponible.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="localisation" role="tabpanel" aria-labelledby="localisation-tab">
+            <div class="card custom-card">
+                <div class="card-header card-header-secondary">
+                    <p class="card-title lead mb-0" style="font-size: 26px; color: #45558A;">Localisation</p>
+                </div>
+                <input type="hidden" id="id_google_maps_coords" value="{{ task.google_maps_coords|default:'' }}">
+                <div id="map" style="height: 400px;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -125,80 +177,43 @@
         background-color: #ffffff;
     }
 </style>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
 <script>
-    function doneTask(taskId) {
-        swal({
-            title: "Terminer la tâche",
-            text: "Êtes-vous sûr de vouloir terminer cette tâche ?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            confirmButtonText: "Oui",
-            cancelButtonText: "Non",
-        })
-        .then((willConfirm) => {
-            if (willConfirm) {
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'done_task' 0 %}".replace('0', taskId),
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal("Succès!", response.message, "success")
-                            .then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Erreur!", response.message, "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Erreur!", "Une erreur s'est produite. Veuillez réessayer.", "error");
-                    }
-                });
-            }
-        });
-    }
     
-    function draftTask(taskId) {
-        swal({
-            title: "Annuler la tâche",
-            text: "Êtes-vous sûr de vouloir remettre en attente de validation cette tâche ?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            confirmButtonText: "Oui",
-            cancelButtonText: "Non",
-        })
-        .then((willConfirm) => {
-            if (willConfirm) {
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'draft_task' 0 %}".replace('0', taskId),
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}',
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal("Succès!", response.message, "success")
-                            .then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Erreur!", response.message, "error");
-                        }
-                    },
-                    error: function() {
-                        swal("Erreur!", "Une erreur s'est produite. Veuillez réessayer.", "error");
-                    }
-                });
-            }
-        });
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const coordsInput = document.getElementById('id_google_maps_coords').value;
+        const defaultCoords = [36.752887, 3.042048];
+        const initialCoords = coordsInput
+            ? coordsInput.split(',').map(coord => parseFloat(coord))
+            : defaultCoords;
     
+        var map = L.map('map').setView(initialCoords, 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 'Groupe Des Sociétés Hasnaoui'
+        }).addTo(map);
+        
+        var marker = L.marker(initialCoords, { draggable: false }).addTo(map);
+    
+        document.querySelector('button[data-bs-target="#localisation"]').addEventListener('shown.bs.tab', function () {
+            setTimeout(() => {
+                map.invalidateSize();
+                window.scrollTo(0, document.body.scrollHeight);
+            }, 100);
+        });
+
+        setTimeout(() => {map.invalidateSize();}, 500);
+
+    });
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+    
+
 </script>
 
 

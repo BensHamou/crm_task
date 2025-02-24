@@ -32,6 +32,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right custom-dropdown" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item {% if request.resolver_match.url_name == 'users' %} active {% endif %}" href="{% url 'users' %}">Utilisateurs</a></li>
+                    <li><a class="dropdown-item {% if request.resolver_match.url_name == 'sync_data' %} active {% endif %}" href="{% url 'sync_data' %}">Synchroniser</a></li>
                 </ul>
             </li>
             {% endif %}
@@ -64,6 +65,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="navbarDropdownSmall">
                     <li><a class="dropdown-item {% if request.resolver_match.url_name == 'users' %} active {% endif %}" href="{% url 'users' %}">Utilisateurs</a></li>
+                    <li><a class="dropdown-item {% if request.resolver_match.url_name == 'sync_data' %} active {% endif %}" href="{% url 'sync_data' %}">Synchroniser</a></li>
                 </ul>
             </li>
             {% endif %}

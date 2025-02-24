@@ -106,7 +106,7 @@ def createTaskView(request):
                         image.instance.task = task
                     if image.instance.image:
                         image.save(user=request.user) 
-            return redirect(getRedirectionURL(request, reverse('tasks')))
+            return redirect(getRedirectionURL(request, reverse('detail_task', args=[task.id])))
         else:
             print("Form Errors:", form.errors)
             print("Formset Errors:")
@@ -160,8 +160,12 @@ def doneTask(request, id):
     if task.state == 'Fait':
         return JsonResponse({'success': True, 'message': 'Tâche déjà marquée comme fait'})
     
+    if not task.resume:
+        return JsonResponse({'success': False, 'message': 'Veuillez ajouter un résumé à la tâche'})
+    
     task.state = 'Fait'
-    task.date_done = timezone.now()
+    if not task.date_done:
+        task.date_done = timezone.now()
     task.save()
     return JsonResponse({'success': True, 'message': 'Tâche marquée comme fait'})
 
@@ -201,11 +205,9 @@ def live_search(request):
     fields = ['id', 'name']
 
     search_for_mapping = {
-        'task_type': ['crm.task.type', domain, fields],
         'project': ['crm.project', domain, fields],
         'lead': ['crm.lead', domain, fields],
         'client': ['res.partner', domain, fields],
-        'wilaya': ['res.country.state', domain, fields]
     }
 
     model = search_for_mapping.get(search_for)

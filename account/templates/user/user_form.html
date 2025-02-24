@@ -6,6 +6,28 @@
 {% load static %} 
 
 {% block content %}
+
+<style>
+    .select2-search {
+        background-color: #ffffff !important;
+        border-radius: 20px !important;
+    }
+    .select2-search input {
+        background-color: #ffffff !important;
+        border-radius: 20px !important;
+    }
+    
+    .select2-results {
+        background-color: #ffffff !important;
+        border-radius: 20px !important;
+    }
+    
+    .select2-container--bootstrap-5 .select2-selection {
+        border-color: #ced4da !important;
+        background-color: #ffffff !important;
+        border-radius: 20px !important;
+    }
+</style>
 <div class="d-flex justify-content-left mb-3" style="padding: 0 25px;">
     <a href="javascript:void(0);" 
         onclick="window.location=constructUrl('{% url 'users' %}')" 

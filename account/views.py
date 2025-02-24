@@ -29,7 +29,10 @@ def homeView(request):
 
 @login_required(login_url='login')
 @admin_only_required
-def refreshUserList(request):
+def syncData(request):
+
+    print('Sychronisation des données...', date.now(), '...', request.user)
+
     usernames = User.objects.values_list('username', flat=True)
     API_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
     GROUP_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users/group/GSH-PST?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
@@ -52,6 +55,8 @@ def refreshUserList(request):
     
     fields = ['id', 'login', 'section_manager_ids']
     for user in User.objects.all():
+        if user.fullname == 'Admin':
+            continue
         user.teams.clear()
         teams = models.execute_kw(db, uid, password, 'res.users', 'search_read', [[['login', '=', user.email.lower()]]], {'fields': fields, 'limit': 1})
         if not teams:
@@ -60,6 +65,16 @@ def refreshUserList(request):
             new_team = CRMTeam.objects.get(odoo_id=t)
             user.teams.add(new_team)
         user.save()
+
+    fields = ['id', 'name']
+    task_types = models.execute_kw(db, uid, password, 'crm.task.type', 'search_read', [], {'fields': fields })
+    for task in task_types:
+        TaskType.objects.get_or_create(odoo_id=task['id'], name=task['name'])
+
+    fields = ['id', 'name']
+    wilayas = models.execute_kw(db, uid, password, 'res.country.state', 'search_read', [[['name', 'ilike', 'Wilaya']]], {'fields': fields })
+    for wilaya in wilayas:
+        Wilaya.objects.get_or_create(odoo_id=wilaya['id'], name=wilaya['name'])
 
     cache_param = str(uuid.uuid4())
     url_path = reverse('users')

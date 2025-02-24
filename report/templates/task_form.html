@@ -22,7 +22,14 @@
     {% csrf_token %}
     <div class="table-responsive" style="padding: 15px;">
         <div class="row mb-4">
-            <div class="col-lg-6 col-md-6 mb-2">
+            <div class="col-lg-6 col-md-12 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Commercial</label>
+                {{ form.commercial }}
+                {% if form.commercial.errors %}
+                    <small class="text-danger">{{ form.commercial.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-12 mb-2">
                 <label class="form-label" style="color: #343434; font-weight: 600;">Designation</label>
                 {{ form.designation }}
                 {% if form.designation.errors %}
@@ -30,10 +37,17 @@
                 {% endif %}
             </div>
             <div class="col-lg-6 col-md-6 mb-2">
-                <label class="form-label" style="color: #343434; font-weight: 600;">Date début</label>
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date prévu</label>
                 {{ form.date_task }}
                 {% if form.date_task.errors %}
                     <small class="text-danger">{{ form.date_task.errors }}</small>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 mb-2">
+                <label class="form-label" style="color: #343434; font-weight: 600;">Date réalisé</label>
+                {{ form.date_done }}
+                {% if form.date_done.errors %}
+                    <small class="text-danger">{{ form.date_done.errors }}</small>
                 {% endif %}
             </div>
             <div class="col-lg-6 col-md-6 mb-2">
@@ -70,8 +84,6 @@
             <div class="col-lg-6 col-md-6 mb-2">
                 <label class="form-label" style="color: #343434; font-weight: 600;">Wilaya</label>
                 {{ form.wilaya }}
-                {{ form.wilaya_id }}
-                <div id="suggestions" class="sugdiv"></div>
                 {% if form.wilaya.errors %}
                     <small class="text-danger">{{ form.wilaya.errors }}</small>
                 {% endif %}
@@ -309,6 +321,35 @@
             }
           });
         });
+        
+        const coordsInput = document.getElementById('id_google_maps_coords').value;
+
+        const defaultCoords = [36.752887, 3.042048];
+        const initialCoords = coordsInput
+        ? coordsInput.split(',').map(coord => parseFloat(coord))
+        : defaultCoords;
+
+        var map = L.map('map').setView(initialCoords, 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 'Groupe Des Sociétés Hasnaoui'
+        }).addTo(map);
+
+        var marker = L.marker(initialCoords, { draggable: true }).addTo(map);
+    
+        document.querySelector('button[data-bs-target="#localisation"]').addEventListener('shown.bs.tab', function () {
+            setTimeout(() => {map.invalidateSize();}, 100);
+        });
+
+        marker.on('dragend', function (event) {
+            var lat = marker.getLatLng().lat.toFixed(6);
+            var lng = marker.getLatLng().lng.toFixed(6);
+            document.getElementById('id_google_maps_coords').value = `${lat},${lng}`;
+        });
+
+        setTimeout(() => {map.invalidateSize();}, 500);
+
     });
     
     function addForm() {
@@ -416,28 +457,6 @@
         $('form').submit(function () { $('[disabled]').removeAttr('disabled'); });
     });
 
-    const coordsInput = document.getElementById('id_google_maps_coords').value;
-
-
-    const defaultCoords = [36.752887, 3.042048];
-    const initialCoords = coordsInput
-    ? coordsInput.split(',').map(coord => parseFloat(coord))
-    : defaultCoords;
-
-    var map = L.map('map').setView(initialCoords, 8);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    var marker = L.marker(initialCoords, { draggable: true }).addTo(map);
-
-    marker.on('dragend', function (event) {
-        var lat = marker.getLatLng().lat.toFixed(6);
-        var lng = marker.getLatLng().lng.toFixed(6);
-        document.getElementById('id_google_maps_coords').value = `${lat},${lng}`;
-    });
 
 </script>
 {% endblock %}
